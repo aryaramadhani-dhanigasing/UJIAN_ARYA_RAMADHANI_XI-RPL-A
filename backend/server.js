@@ -120,7 +120,7 @@ app.post("/api/peminjaman", async (req, res) => {
         if (!id_alat || !nama_peminjam || !kelas || !Number.isInteger(jumlah) || jumlah < 1) {
             return res.status(400).json({ error: "Data tidak lengkap atau jumlah tidak valid" });
         }
-            
+
         const query = `INSERT INTO peminjaman (id_alat, nama_peminjam, kelas, jumlah)
       VALUES ($1, $2, $3, $4) RETURNING *`;
         const result = await pool.query(query, [id_alat, nama_peminjam, kelas, jumlah]);
@@ -275,3 +275,6 @@ const PORT = 5000;
 app.listen(PORT, () => {
     console.log(`Server berhasil berjalan di http://localhost:${PORT}`);
 });
+
+
+

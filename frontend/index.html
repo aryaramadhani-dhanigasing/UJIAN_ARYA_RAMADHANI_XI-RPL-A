@@ -1,17 +1,163 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistem Peminjaman Alat</title>
- 
-  <link href="./dist/output.css" rel="stylesheet">
-</head>
-<body>
-  <h1 class="text-3xl font-bold underline text-blue-600">
-    Test Tailwind Berhasil!
-  </h1>
 
-  <script src="./js/app.js"></script>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Peminjaman Alat</title>
+    <link rel="stylesheet" href="dist/output.css" />
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+    <header class="bg-blue-700 text-white">
+        <h1 class="mx-auto max-w-5xl px-4 py-4 text-xl font-bold">Peminjaman Alat Praktik</h1>
+    </header>
+
+    <main class="mx-auto max-w-5xl space-y-8 px-4 py-6">
+        <!--  DATA KATEGORI ALAT  -->
+        <section>
+            <div class="mb-3 flex items-center justify-between">
+                <h2 class="text-lg font-semibold">Data Kategori Alat</h2>
+                <button id="btn-tambah-kategori"
+                    class="rounded bg-green-600 px-3 py-2 text-sm font-medium text-white hover:bg-green-700">Tambah
+                    Kategori</button>
+            </div>
+
+            <form id="form-kategori" class="mb-4 hidden grid gap-3 rounded border bg-white p-4 sm:grid-cols-2">
+                <h3 id="judul-kategori" class="font-semibold sm:col-span-2">Tambah Kategori</h3>
+                <input id="kategori-id" type="hidden" />
+                <label class="text-sm">Nama Kategori
+                    <input id="k-nama" required class="mt-1 block w-full rounded border px-3 py-2" />
+                </label>
+                <label class="text-sm">Deskripsi
+                    <input id="k-deskripsi" class="mt-1 block w-full rounded border px-3 py-2" />
+                </label>
+                <p id="k-error" class="hidden text-sm text-red-600 sm:col-span-2"></p>
+                <div class="flex gap-2 sm:col-span-2">
+                    <button type="submit"
+                        class="rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">Simpan</button>
+                    <button type="button" id="btn-batal-kategori"
+                        class="rounded border px-4 py-2 text-sm hover:bg-slate-100">Batal</button>
+                </div>
+            </form>
+
+            <div class="overflow-x-auto rounded border bg-white">
+                <table class="w-full min-w-[480px] text-left text-sm">
+                    <thead class="bg-slate-100">
+                        <tr>
+                            <th class="p-2">Nama Kategori</th>
+                            <th class="p-2">Deskripsi</th>
+                            <th class="p-2">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="kategori-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!--  DATA ALAT  -->
+        <section>
+            <div class="mb-3 flex items-center justify-between">
+                <h2 class="text-lg font-semibold">Data Alat</h2>
+                <button id="btn-tambah"
+                    class="rounded bg-green-600 px-3 py-2 text-sm font-medium text-white hover:bg-green-700">Tambah
+                    Alat</button>
+            </div>
+
+            <form id="form-alat" class="mb-4 hidden grid gap-3 rounded border bg-white p-4 sm:grid-cols-2">
+                <h3 id="judul-alat" class="font-semibold sm:col-span-2">Tambah Alat</h3>
+                <input id="alat-id" type="hidden" />
+                <label class="text-sm">Nama alat
+                    <input id="a-nama" required class="mt-1 block w-full rounded border px-3 py-2" />
+                </label>
+                <label class="text-sm">Kategori
+                    <select id="a-kategori" required class="mt-1 block w-full rounded border px-3 py-2"></select>
+                </label>
+                <label class="text-sm">Kondisi
+                    <input id="a-kondisi" value="Baik" class="mt-1 block w-full rounded border px-3 py-2" />
+                </label>
+                <label class="text-sm">Stok
+                    <input id="a-stok" type="number" min="0" value="1" required
+                        class="mt-1 block w-full rounded border px-3 py-2" />
+                </label>
+                <label class="text-sm sm:col-span-2">Lokasi
+                    <input id="a-lokasi" class="mt-1 block w-full rounded border px-3 py-2" />
+                </label>
+                <p id="a-error" class="hidden text-sm text-red-600 sm:col-span-2"></p>
+                <div class="flex gap-2 sm:col-span-2">
+                    <button type="submit"
+                        class="rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">Simpan</button>
+                    <button type="button" id="btn-batal"
+                        class="rounded border px-4 py-2 text-sm hover:bg-slate-100">Batal</button>
+                </div>
+            </form>
+
+            <div class="overflow-x-auto rounded border bg-white">
+                <table class="w-full min-w-[560px] text-left text-sm">
+                    <thead class="bg-slate-100">
+                        <tr>
+                            <th class="p-2">Nama</th>
+                            <th class="p-2">Kategori</th>
+                            <th class="p-2">Lokasi</th>
+                            <th class="p-2">Kondisi</th>
+                            <th class="p-2">Stok</th>
+                            <th class="p-2">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alat-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- DATA PEMINJAMAN (READ, UPDATE, DELETE) -->
+        <section>
+            <h2 class="mb-3 text-lg font-semibold">Data Peminjaman</h2>
+            <div class="overflow-x-auto rounded border bg-white">
+                <table class="w-full min-w-[640px] text-left text-sm">
+                    <thead class="bg-slate-100">
+                        <tr>
+                            <th class="p-2">Alat</th>
+                            <th class="p-2">Peminjam</th>
+                            <th class="p-2">Kelas</th>
+                            <th class="p-2">Jumlah</th>
+                            <th class="p-2">Pinjam</th>
+                            <th class="p-2">Kembali</th>
+                            <th class="p-2">Status</th>
+                            <th class="p-2">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pinjam-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- TAMBAH PEMINJAMAN (CREATE) -->
+        <section class="rounded border bg-white p-4">
+            <h2 class="mb-3 text-lg font-semibold">Tambah Peminjaman</h2>
+            <form id="form-pinjam" class="grid gap-3 sm:grid-cols-2">
+                <label class="text-sm">Nama peminjam
+                    <input id="p-nama" required class="mt-1 block w-full rounded border px-3 py-2" />
+                </label>
+                <label class="text-sm">Kelas
+                    <input id="p-kelas" required placeholder="XII RPL 1"
+                        class="mt-1 block w-full rounded border px-3 py-2" />
+                </label>
+                <label class="text-sm">Alat
+                    <select id="p-alat" required class="mt-1 block w-full rounded border px-3 py-2"></select>
+                </label>
+                <label class="text-sm">Jumlah
+                    <input id="p-jumlah" type="number" min="1" value="1" required
+                        class="mt-1 block w-full rounded border px-3 py-2" />
+                </label>
+                <p id="p-error" class="hidden text-sm text-red-600 sm:col-span-2"></p>
+                <button type="submit"
+                    class="rounded bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 sm:col-span-2">Simpan
+                    Peminjaman</button>
+            </form>
+        </section>
+    </main>
+
+    <script src="js/app.js"></script>
 </body>
+
 </html>
