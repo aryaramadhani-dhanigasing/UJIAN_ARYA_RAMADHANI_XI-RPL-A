@@ -8,6 +8,19 @@ require("dotenv").config();
 app.use(cors());
 app.use(express.json());
 
+// Body kosong tetap dianggap objek kosong, supaya tidak error 500
+app.use((req, res, next) => {
+    req.body = req.body || {};
+    next();
+});
+
+// Semua :id harus angka, kalau bukan dibalas 400
+app.param("id", (req, res, next, val) => {
+    if (!/^\d+$/.test(val)) {
+        return res.status(400).json({ error: "ID harus berupa angka" });
+    }
+    next();
+});
 
 app.get("/", (req, res) => {
     res.send("Selamat datang di Server Backend Peminjaman Alat!");
@@ -107,7 +120,7 @@ app.post("/api/peminjaman", async (req, res) => {
         if (!id_alat || !nama_peminjam || !kelas || !Number.isInteger(jumlah) || jumlah < 1) {
             return res.status(400).json({ error: "Data tidak lengkap atau jumlah tidak valid" });
         }
-
+            
         const query = `INSERT INTO peminjaman (id_alat, nama_peminjam, kelas, jumlah)
       VALUES ($1, $2, $3, $4) RETURNING *`;
         const result = await pool.query(query, [id_alat, nama_peminjam, kelas, jumlah]);
@@ -141,7 +154,7 @@ app.patch("/api/alat/:id", async (req, res) => {
         const result = await pool.query(query, [id_kategori, nama_alat, kondisi, stok, lokasi, id]);
 
         if (result.rows.length === 0) {
-            return res.status(404).json({ error: "Data tidak ditemukan" });
+            return res.status(404).json({ error: "Data tidak ditemukan" }); //tandai 
         }
         res.status(200).json(result.rows[0]);
     } catch (err) {
